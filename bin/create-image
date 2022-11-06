@@ -42,12 +42,13 @@ DESCRIPTION_BODY="dockerize image tool that can be used for generating a local d
 ## create-image function
 
 if [[ -z $2  ]]; then
-   echo   ${BOLD}   "$TITLE"
-   echo   ${BOLD}   "Description:"
+   printf ${NORMAL}"\n"
+   echo   ${BOLD} "Usage:" ${NORMAL}
    printf "\n"
-   echo   ${NORMAL} "$DESCRIPTION_BODY" 
-   printf ${NORMAL}"\n"
-   printf ${NORMAL}"\n"
+   echo   "${BOLD} -ic|--image-create <ImageName> <path/to/dockerfile>  ${NORMAL}           Create docker image provide the name and app Dockerfile location"
+   echo   "${BOLD} -ic|--image-create <ImageName> <path/to/dockerfile> --force  ${NORMAL}   Forced overwrite of existing docker image."
+   printf "\n"
+   printf "\n"
    echo  ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} Please provide a docker image name and app directory path that contains a dockerfile when running this command..."
    echo  ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} Exiting..."
 

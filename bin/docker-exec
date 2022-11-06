@@ -26,9 +26,6 @@ successMsg=$(
     echo $GREEN"[SUCCESS]"$NC
 )
 
-checkContainers=$(
-    docker container ls | grep $DOCKER_IMAGE_NAME
-)
 
 VERBOSE_TAG_1=$infoMsg
 VERBOSE_TAG_2=$errorMsg
@@ -36,14 +33,7 @@ VERBOSE_TAG_3=$warningMsg
 VERBOSE_TAG_4=$successMsg
 DOCKER_CONTAINER_NAME=$2
 POSTGRES_USERNAME=$3
-
-
-postgresConnect=$(
-    docker exec -it -u ${POSTGRES_USERNAME} ${DOCKER_CONTAINER_NAME} psql 
-)
-bashConnect=$(
-    docker exec -it $DOCKER_CONTAINER_NAME bash
-)
+CONTAINER_NAME=$3
 
 #mysqlConnect=$(
 #)
@@ -52,15 +42,15 @@ if [[ -z $2 ]]; then
     echo "$VERBOSE_TAG_3 ${NORMAL} Please provide the container name to exec into..."
     echo "$VERBOSE_TAG_1 ${NORMAL} For a full list of running containers run docker ps"
 
-elif [[ $DOCKER_IMAGE_NAME == *'postgres'* ]]; then
-
+elif [[ $2 == *'postgres'* ]]; then
     echo "$VERBOSE_TAG_3 ${NORMAL} Please provide the postgres username to connect with"
-    $postgresConnect
+    docker exec -it -u $POSTGRES_USERNAME $(docker ps | grep $DOCKER_CONTAINER_NAME | awk {'print $11'}) psql 2>> /dev/null
 
+elif [[ -z $(docker ps | grep -o $DOCKER_CONTAINER_NAME 2>> /dev/null) ]]; then
+    echo "$VERBOSE_TAG_1 ${NORMAL} Validating if there is a running docker service with the name: $DOCKER_CONTAINER_NAME"
+    echo "$VERBOSE_TAG_3 ${NORMAL} There is no running service with the name: $DOCKER_CONTAINER_NAME"
 else
-    
     echo "$VERBOSE_TAG_1 ${NORMAL} Connecting to docker service... $DOCKER_CONTAINER_NAME"
-    $bashConnect
-fi    
-
+    docker exec -it $DOCKER_CONTAINER_NAME bash
+fi
 

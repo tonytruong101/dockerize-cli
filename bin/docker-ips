@@ -1,0 +1,43 @@
+#!/bin/sh
+
+#Exit script on failure of any command
+set -e
+
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+errorMsg=$(
+    echo $RED"[  ERROR]"$NC
+)
+
+infoMsg=$(
+    echo ${BOLD}"[   INFO]"${NORMAL}
+)
+
+warningMsg=$(
+    echo $YELLOW"[WARNING]"$NC
+    )
+
+successMsg=$(
+    echo $GREEN"[SUCCESS]"$NC
+)
+
+
+VERBOSE_TAG_1=$infoMsg
+VERBOSE_TAG_2=$errorMsg
+VERBOSE_TAG_3=$warningMsg
+VERBOSE_TAG_4=$successMsg
+DOCKER_CONTAINER_NAME=$2
+POSTGRES_USERNAME=$3
+CONTAINER_NAME=$3
+
+echo ${BOLD} "$VERBOSE_TAG_1 Grabbing list of docker ip addresses from running containers...."${NORMAL}
+
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} %tab% {{.Name}}' $(docker ps -aq) | sed 's#%tab%#\t#g' | sed 's#/##g' | sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n
+
+echo ${BOLD} "$VERBOSE_TAG_1 End of list..."${NORMAL}
+
