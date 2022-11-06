@@ -1,0 +1,69 @@
+#!/bin/sh
+
+#Exit script on failure of any command
+set -e
+
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+errorMsg=$(
+    echo $RED"[  ERROR]"$NC
+)
+
+infoMsg=$(
+    echo ${BOLD}"[   INFO]"${NORMAL}
+)
+
+warningMsg=$(
+    echo $YELLOW"[WARNING]"$NC
+    )
+
+successMsg=$(
+    echo $GREEN"[SUCCESS]"$NC
+)
+
+checkContainers=$(
+    docker container ls | grep $DOCKER_IMAGE_NAME
+)
+
+VERBOSE_TAG_1=$infoMsg
+VERBOSE_TAG_2=$errorMsg
+VERBOSE_TAG_3=$warningMsg
+VERBOSE_TAG_4=$successMsg
+DOCKER_IMAGE_NAME=$2
+
+if [[ -z $2 ]]; then
+    echo "$VERBOSE_TAG_3 ${NORMAL} Please provide the image name to delete..."
+    echo "$VERBOSE_TAG_1 ${NORMAL} For a full list of docker images run dockerize--image-list or dockerize -il"
+
+elif [[ -z $(docker image ls |grep $DOCKER_IMAGE_NAME) ]]; then
+
+    echo ${BOLD} "$VERBOSE_TAG_2 No such docker image with the name $DOCKER_IMAGE_NAME exists on your local machine"
+
+elif [[ -n $(docker container ls |grep $DOCKER_IMAGE_NAME) ]]; then
+
+    echo ${BOLD} "$VERBOSE_TAG_3 You're about to remove a docker image that is used by:"
+    echo ${BOLD} "$VERBOSE_TAG_3"
+else
+    echo ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} Deleting.... ${BOLD}$DOCKER_IMAGE_NAME"
+    echo ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} You're about to delete the following image: ${BOLD}$DOCKER_IMAGE_NAME"
+    echo ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} This cannot be reversed..."
+    printf  "\n"
+
+    read -p "${BOLD} $VERBOSE_TAG_3  Do you wish to proceed?: y/n " -n 1 -r
+fi
+
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    printf ${NORMAL}"\n"
+    echo   ${BOLD}  "$VERBOSE_TAG_1 Proceeding with image delete.."
+    printf ${NORMAL}"\n"
+    docker image rm $2 >> /dev/null
+    printf ${NORMAL}"\n"
+    echo   ${BOLD}  "$VERBOSE_TAG_4 $DOCKER_IMAGE_NAME image has been successfully deleted.."
+else
+    echo ${BOLD} "$VERBOSE_TAG_1 Exiting..."
+fi

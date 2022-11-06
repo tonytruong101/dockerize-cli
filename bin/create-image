@@ -1,0 +1,111 @@
+#!/bin/sh
+
+#Exit script on failure of any command
+set -e
+
+## create-image environment variables
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+errorMsg=$(
+echo $RED"[  ERROR]"$NC;
+
+)
+infoMsg=$(
+
+echo ${BOLD}"[   INFO]"
+)
+
+warningMsg=$(
+echo $YELLOW"[WARNING]"$NC
+)
+
+successMsg=$(
+echo $GREEN"[SUCCESS]"$NC
+)
+
+VERBOSE_TAG_1=$infoMsg
+VERBOSE_TAG_2=$errorMsg
+VERBOSE_TAG_3=$warningMsg
+VERBOSE_TAG_4=$successMsg
+DOCKER_IMAGE_NAME=$2
+FORCE=$4
+APP_PATH=$3
+VERSION='v1.0.0'
+TITLE="'Dockerize $VERSION'"
+DESCRIPTION_BODY="dockerize image tool that can be used for generating a local docker image"
+
+## create-image function
+
+if [[ -z $2  ]]; then
+   echo   ${BOLD}   "$TITLE"
+   echo   ${BOLD}   "Description:"
+   printf "\n"
+   echo   ${NORMAL} "$DESCRIPTION_BODY" 
+   printf ${NORMAL}"\n"
+   printf ${NORMAL}"\n"
+   echo  ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} Please provide a docker image name and app directory path that contains a dockerfile when running this command..."
+   echo  ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} Exiting..."
+
+elif [[ $FORCE == *'--force'* ]]; then
+
+   echo   ${BOLD}   "$TITLE"
+   echo   ${BOLD}   "Description:"
+   printf "\n"
+   echo   ${NORMAL} "$DESCRIPTION_BODY" 
+   printf ${NORMAL}"\n"
+   printf ${NORMAL}"\n"
+   echo ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} Starting forced docker build..."
+   docker build --platform=linux/amd64 -t "$DOCKER_IMAGE_NAME" $APP_PATH
+   echo ${BOLD} "$VERBOSE_TAG_4 ${NORMAL} Forced $DOCKER_IMAGE_NAME Build Completed..."
+
+elif [[ -n $(docker image ls | grep $DOCKER_IMAGE_NAME) ]]; then
+
+   echo   ${BOLD}   "$TITLE"
+   echo   ${BOLD}   "Description"
+   printf "\n"
+   echo   ${NORMAL} "$DESCRIPTION_BODY" 
+   printf ${NORMAL}"\n"
+   printf ${NORMAL}"\n"
+   echo ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} There seems to be an existing image with the name ${BOLD}$DOCKER_IMAGE_NAME${NORMAL} found..."
+   echo ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} You can supress this message by changing the DOCKER_IMAGE_NAME name or passing in --force to overwrite your existing image."
+   echo ${BOLD} "$VERBOSE_TAG_3 ${BOLD} REBUILDING AN IMAGE MAY RESULT IN DATA LOSS FOR RUNNING CONTAINERS THAT HAVE THE SAME DOCKER IMAGE ONLY RUN --force IF YOU SURE WITH WHAT YOU'RE DOING"
+
+elif [[ $RAILS_APP_PATH == *'--force'* ]]; then
+
+   echo ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} Whoops, it appears you have provided --force as the app_path for local application directory path that contains a dockerfile"
+   echo ${BOLD} "$VERBOSE_TAG_1 ${NORMAL} In order to build a docker image"
+   echo ${BOLD} "$VERBOSE_TAG_1 ${NORMAL} Please re run this command including the full path to your local application directory that contains a dockerfile"
+
+elif [[ -n $2 && -z $3 ]]; then
+
+   echo   ${BOLD}   "$TITLE"
+   echo   ${BOLD}   "Description:"
+   printf "\n"
+   echo   ${NORMAL} "$DESCRIPTION_BODY" 
+   printf ${NORMAL}"\n"
+   printf ${NORMAL}"\n"
+   echo ${BOLD} "$VERBOSE_TAG_1 ${NORMAL} Starting docker build..."    
+   echo ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} Whoops, it appears you haven't provided the app_path  to your local application directory that contains a dockerfile"
+   echo ${BOLD} "$VERBOSE_TAG_1 ${NORMAL} In order to build a docker image please"
+   echo ${BOLD} "$VERBOSE_TAG_1 ${NORMAL} Please re run this command including the full path to your local application directory that contains a dockerfile"    
+
+else
+
+   echo   ${BOLD}   "$TITLE"
+   echo   ${BOLD}   "Description:"
+   printf "\n"
+   echo   ${NORMAL} "$DESCRIPTION_BODY" 
+   printf ${NORMAL}"\n"
+   printf ${NORMAL}"\n"
+   echo ${BOLD} "$VERBOSE_TAG_1 ${NORMAL} Starting docker build..."    
+   docker build --platform=linux/amd64 -t $DOCKER_IMAGE_NAME $APP_PATH
+   echo ${BOLD} "$VERBOSE_TAG_4 ${NORMAL} $DOCKER_IMAGE_NAME Build Completed..."
+   echo ${BOLD} "$VERBOSE_TAG_1 ${NORMAL} To deploy app docker container using $DOCKER_IMAGE_NAME"
+   echo ${BOLD} "$VERBOSE_TAG_1 ${NORMAL} Run docker --run DOCKER_IMAGE_NAME to start your new app container"
+fi
+

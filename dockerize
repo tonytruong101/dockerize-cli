@@ -1,0 +1,111 @@
+#!/bin/sh
+
+set -e
+
+## Variables
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+VERBOSE_TAG_1=$infoMsg
+VERBOSE_TAG_2=$errorMsg
+VERBOSE_TAG_3=$warningMsg
+USER_PROMPT=$1
+USER_PROMPT2=$2
+VERSION='v1.0.0'
+CONTACT='tonytruong873@gmail.com'
+DOCS=https://github.com/tonytruong101/dockerize-cli
+TITLE_APP='Dockerize $VERSION'
+TITLE_MAINTAINER='Maintainer Contact:'
+TITLE_DESCRIPTION='Description:'
+
+## Functions
+errorMsg=$(
+echo -e $RED"[  ERROR]"$NC;
+)
+
+infoMsg=$(
+echo -e $NC"[   INFO]"${NORMA}
+)
+
+warningMsg=$(
+echo -e $YELLOW"[WARNING]"$NC
+)
+
+titleApp=$(
+   echo   ${BOLD} "$TITLE_APP${NORMAL} $VERSION"; 
+)
+
+titleMaintainer=$(
+   echo   ${BOLD} "$TITLE_MAINTAINER${NORMAL} $CONTACT"
+)
+titleDescription=$(
+   echo   ${BOLD} "$TITLE_DESCRIPTION ${NORMAL}"   
+)
+
+
+if [[ -z $1  ]]; then
+   printf "\n"
+   echo   $titleApp
+   echo   $titleMaintainer
+   echo   $titleDescription
+   printf "\n"
+   echo   "dockerize it! A better cli tool for docker image related commands" 
+   printf "\n"
+   echo   ${BOLD}   "List of commands:" ${NORMAL}
+   echo   "( -i|--image)          docker image related commands"
+   printf "\n"
+   printf "\n"
+   echo   "Stuck? Need help troubleshooting? For a full guide of how this application works"
+   printf "\n"
+   printf "please visit: ${BOLD}$DOCS"
+   printf "\n"
+
+
+elif [[ $USER_PROMPT =~ ^(-i|--image)$  ]]; then
+   printf "\n"
+   echo   $titleApp
+   echo   $titleMaintainer
+   echo   $titleDescription
+   printf "\n"
+   echo   "dockerize image commands:"
+   printf "\n"
+   echo   ${BOLD} "Usage:" ${NORMAL}
+   printf "\n"
+   echo   "( -il|--image-list)          Lists all created docker images"
+   echo   "( -ic|--image-create)        Create a local docker image"
+   echo   "( -id|--image-delete)        Delete a local docker image"
+   printf "\n"
+
+elif [[ $USER_PROMPT =~ ^(-il|--image-list)$  ]]; then
+   printf "\n"
+   echo   $titleApp
+   echo   $titleMaintainer
+   echo   $titleDescription
+   printf "\n"
+   docker image ls
+
+elif [[ $USER_PROMPT =~ ^(-ic|--image-create)$  ]]; then
+   printf "\n"
+   echo   $titleApp
+   echo   $titleMaintainer
+   echo   $titleDescription
+   printf "\n"   
+   source ./bin/create-image
+
+
+elif [[ $USER_PROMPT =~ ^(-id|--image-delete)$  ]]; then
+   printf "\n"
+   echo   $titleApp
+   echo   $titleMaintainer
+   echo   $titleDescription
+   printf "\n"
+   source ./bin/delete-image
+
+else
+
+   echo "command not found"
+
+fi
+
