@@ -16,7 +16,7 @@ USER_PROMPT2=$2
 VERSION='v1.0.0'
 CONTACT='tonytruong873@gmail.com'
 DOCS=https://github.com/tonytruong101/dockerize-cli
-TITLE_APP='Dockerize $VERSION'
+TITLE_APP='dockerize-it'
 TITLE_MAINTAINER='Maintainer Contact:'
 TITLE_DESCRIPTION='Description:'
 
