@@ -14,6 +14,19 @@ How about discovering different docker container server ip addresses quickly?
 I created this simple bash cli tool that wraps basic `docker` related commands with adding in basic validators, filtering and better output 
 to prevent any user errors from occurring. 
 
+
+## Command Overview
+
+![screenshot](./docs/images/dockerize-it-1.png)
+
+
+## Image create / delete Validation Image
+
+![screenshot](./docs/images/dockerize-it-2.png)
+
+![screenshot](./docs/images/dockerize-it-3.png)
+
+
 This is a personal project feel free to fork and use or tailor to your own needs.
 
 
