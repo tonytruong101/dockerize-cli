@@ -104,6 +104,14 @@ elif [[ $USER_PROMPT =~ ^(-id|--image-delete)$  ]]; then
    printf "\n"
    source ./bin/delete-image
 
+   elif [[ $USER_PROMPT =~ ^(-ip|--ip)$  ]]; then
+   printf "\n"
+   echo   $titleApp
+   echo   $titleMaintainer
+   echo   $titleDescription
+   printf "\n"
+   source ./bin/docker-ips
+
 elif [[ $USER_PROMPT =~ ^(-e|--exec)$  ]]; then
    printf "\n"
    echo   $titleApp
