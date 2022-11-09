@@ -1,0 +1,31 @@
+FROM ubuntu:16.04
+
+USER root
+RUN apt-get update && \
+    apt install -y openssh-server && \
+    apt install -y software-properties-common && \
+    apt-add-repository --yes --update ppa:ansible/ansible &&\
+    apt install -y ansible && \
+    mkdir -p /.ansible/tmp && \
+    mkdir -p /.ansible/cp  && \
+    chmod 777 -R /.ansible/tmp && \
+    chmod 777 -R /.ansible/cp && \
+    apt-get update &&\
+    apt-get -y install curl &&\
+    curl -sL https://deb.nodesource.com/setup_10.x|  bash - &&\
+    apt-get install -y nodejs &&\
+    mkdir /var/run/sshd &&\
+    groupadd ubuntu
+
+
+CMD ['/usr/sbin/sshd', '-D']
+RUN useradd -rm -d /home/ubuntu -s /bin/bash -g root -G sudo -u 1000 ubuntu
+RUN usermod -aG ubuntu ubuntu
+
+COPY ./ /srv/app
+
+USER ubuntu
+
+EXPOSE 8080
+EXPOSE 22
+EXPOSE 5000

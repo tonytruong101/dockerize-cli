@@ -1,0 +1,96 @@
+#!/bin/sh
+
+#Exit script on failure of any command
+set -e
+
+## create-image environment variables
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+errorMsg=$(
+echo $RED"[  ERROR]"$NC;
+
+)
+
+infoMsg=$(
+
+echo -e ${BOLD}"[   INFO]"
+)
+
+warningMsg=$(
+echo -e $YELLOW"[WARNING]"$NC
+)
+
+successMsg=$(
+echo -e $GREEN"[SUCCESS]"$NC
+)
+
+VERBOSE_TAG_1=$infoMsg
+VERBOSE_TAG_2=$errorMsg
+VERBOSE_TAG_3=$warningMsg
+VERBOSE_TAG_4=$successMsg
+VERSION='v1.0.0'
+TITLE="Application '$VERSION'"
+DESCRIPTION_BODY=""
+STEP='7'
+BE_001='Ansible_NodeJS__Ubuntu_16.04'
+TMP_DIR=./tmp/generated_dockerfiles
+DOCKER_OUTPUT='Dockerfile'
+
+## Arrays
+dockerFile=("backend" "frontend")
+backendList=("[be-001]Ansible_NodeJS__Ubuntu_16.04")
+
+## Main-script Function Code
+
+echo ${BOLD} "$VERBOSE_TAG_1 ${NORMAL} [1/$STEP] Preparing Dockerfile..."
+echo ${BOLD} "$VERBOSE_TAG_3 ${NORMAL} [2/$STEP] Select a category..."
+
+for str in ${dockerFile[@]}; do
+  echo $str
+done
+
+read -p ${BOLD}"Select:" -r userDockerFile
+
+echo $userDockerFile
+
+if [[ $userDockerFile =~ backend$ ]]; then
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [3/$STEP] $dockerfileInput selected..."
+        echo "${BOLD} $VERBOSE_TAG_3 ${NORMAL} [3/$STEP] Please choose any of the custom dockerfiles below using its tag..."
+
+	for str in ${backendList[@]}; do
+  		echo $GREEN $str
+        done
+else
+        echo "No available option matches that description"
+fi
+
+read -p ${BOLD}"Select:" -r userBackendInput
+
+if [[ $userBackendInput =~ be-001$ ]]; then
+	echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [4/$STEP] $BE_001 selected..."
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [4/$STEP] Creating tmp directory..."
+	mkdir -p $TMP_DIR/$BE_001
+        echo "${BOLD} $VERBOSE_TAG_4 ${NORMAL} [4/$STEP] tmp directory created..."
+	echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [5/$STEP] Generating a local $BE_001 dockerfile..."	
+        cp ./src/templates/ansible_nodejs_ubuntu $TMP_DIR/$BE_001/$DOCKER_OUPUT
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [5/$STEP] $BE_001 dockerfile has been generated..."
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [6/$STEP] Validating if local generated file exists..."
+else
+	echo  "${BOLD} $VERBOSE_TAG_1 ${NORMAL} Exiting..... "
+fi
+
+if [[ -n $(ls $TMP_DIR) ]]; then
+        echo "${BOLD} $VERBOSE_TAG_4 ${NORMAL} [6/$STEP] Validation successful..."
+else
+	echo "${BOLD} $VERBOSE_TAG_4 ${NORMAL} [6/$STEP] Validation failed..."
+	echo "${BOLD} $VERBOSE_TAG_4 ${NORMAL} [6/$STEP] Please inspect logs..."
+fi
+
+echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} You can find your newly generated $userBackendInput file at" 
+
+echo ${BOLD} "$VERBOSE_TAG_1 ${NORMAL} $TMP_DIR/$BE_001/$DOCKER_OUTPUT"

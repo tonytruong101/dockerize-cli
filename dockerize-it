@@ -53,10 +53,11 @@ if [[ -z $1  ]]; then
    printf "\n"
    echo   "dockerize it! A better cli tool for docker image related commands" 
    printf "\n"
-   echo   ${BOLD}   "List of commands:" ${NORMAL}
-   echo   "( -e|--exec)           docker exec related commands"
-   echo   "( -i|--image)          docker image related commands"
-   echo   "(-ip|--ip)             docker ip related commands"
+   echo   ${BOLD}   " List of commands:" ${NORMAL}
+   echo   "( -e|--exec)        docker exec related commands"
+   echo   "( -g|--generate)    Generate a docker configuration files."
+   echo   "( -i|--image)       docker image related commands"
+   echo   "(-ip|--ip)          docker ip related commands"
    printf "\n"
    printf "\n"
    echo   "Stuck? Need help troubleshooting? For a full guide of how this application works"
@@ -132,6 +133,21 @@ elif [[ $USER_PROMPT =~ ^(-ec|--exec-connect)$  ]]; then
    echo   $titleDescription
    printf "\n"
    source ./bin/docker-exec
+elif [[ $USER_PROMPT =~ ^(-g|--generate)$  ]]; then
+   printf "\n"
+   echo   $titleApp
+   echo   $titleMaintainer
+   echo   $titleDescription
+   printf "\n"
+   echo   "Generate Dockerfiles or docker-compose.yml files."
+   printf "\n"
+   echo   ${BOLD} "Usage:" ${NORMAL}
+   printf "\n"
+   echo   "( -gdf|--generate-dockerfile)    Generates a dockerfile."
+   echo   "( -gdc|--generate-dockercompose) Generates a docker-compose yaml."
+
+elif [[ $USER_PROMPT =~ ^(-gdf|--generate-dockerfile)$  ]]; then
+   source ./bin/generate-dockerfile
 else
 
    echo "command not found"
