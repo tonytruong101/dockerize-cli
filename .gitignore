@@ -1,2 +1,5 @@
 ## Ignore docker-bin
 ./docker-bin/*
+
+##tmp files
+./tmp/*
