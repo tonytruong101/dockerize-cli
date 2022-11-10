@@ -41,9 +41,12 @@ BE_001='Ansible_NodeJS__Ubuntu_16.04'
 TMP_DIR=./tmp/generated_dockerfiles
 DOCKER_OUTPUT='Dockerfile'
 
+## Backend Env Vars
+BE_001='Ansible_NodeJS__Ubuntu_16.04'
+BE_002='Jenkins_DockerCLI_Ubuntu_20.04'
 ## Arrays
 dockerFile=("backend" "frontend")
-backendList=("[be-001]Ansible_NodeJS__Ubuntu_16.04")
+backendList=("[be-001]Ansible_NodeJS__Ubuntu_16.04" "[be-002]Jenkins_DockerCLI_Ubuntu_20.04")
 
 ## Main-script Function Code
 
@@ -80,6 +83,16 @@ if [[ $userBackendInput =~ be-001$ ]]; then
         cp ./src/templates/ansible_nodejs_ubuntu $TMP_DIR/$BE_001/$DOCKER_OUPUT
         echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [5/$STEP] $BE_001 dockerfile has been generated..."
         echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [6/$STEP] Validating if local generated file exists..."
+elif [[ $userBackendInput =~ be-002$ ]]; then
+	echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [4/$STEP] $BE_002 selected..."
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [4/$STEP] Creating tmp directory..."
+        mkdir -p $TMP_DIR/$BE_002
+        echo "${BOLD} $VERBOSE_TAG_4 ${NORMAL} [4/$STEP] tmp directory created..."
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [5/$STEP] Generating a local $BE_002 dockerfile..."
+        cp ./src/templates/jenkins_dockertools_ubuntu $TMP_DIR/$BE_002/$DOCKER_OUPUT
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [5/$STEP] $BE_001 dockerfile has been generated..."
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [6/$STEP] Validating if local generated file exists..."
+
 else
 	echo  "${BOLD} $VERBOSE_TAG_1 ${NORMAL} Exiting..... "
 fi
