@@ -14,12 +14,16 @@ How about discovering different docker container server ip addresses quickly?
 I created this simple bash cli tool that wraps basic `docker` related commands with adding in basic validators, filtering and better output 
 to prevent any user errors from occurring. 
 
-## Added:
+## Changelog
+
+Nov 9 2022
+Added:
 
 - New Generate Dockerfile feature. 
 
 Includes custom built tech stacks that are easily interchangeable. Not really a reason besides quick easy way to generate Dockerfiles in a new environment
 without having to lookup repos, articles or whatever else run a simple command to download a ready to go Dockerfile.
+
 
 
 ## Command Overview
