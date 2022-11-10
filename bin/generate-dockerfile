@@ -38,7 +38,6 @@ VERSION='v1.0.0'
 TITLE="Application '$VERSION'"
 DESCRIPTION_BODY=""
 STEP='7'
-BE_001='Ansible_NodeJS__Ubuntu_16.04'
 TMP_DIR=./tmp/generated_dockerfiles
 DOCKER_OUTPUT='Dockerfile'
 
@@ -48,10 +47,12 @@ FE_001='react_docker'
 ## Backend Env Vars
 BE_001='ansible_nodejs_ubuntu'
 BE_002='jenkins_dockertools_ubuntu'
+BE_003='nodejs_docker'
+
 
 ## Arrays
 dockerFile=("backend" "frontend")
-backendList=("[be-001]Ansible_NodeJS__Ubuntu_16.04" "[be-002]Jenkins_DockerCLI_Ubuntu_20.04")
+backendList=("[be-001]Ansible_NodeJS__Ubuntu_16.04" "[be-002]Jenkins_DockerCLI_Ubuntu_20.04" "[be-003]NodeJS_Docker")
 frontendList=("[fe-001]Simple_react_docker")
 
 ## Main-script Function Code
@@ -100,6 +101,10 @@ case $userInput in
 	  echo $BE_002 
 	  ;;
 	
+  	be-003)
+	  echo $BE_003
+	  ;;
+
 	fe-001)
 	  echo $FE_001 
 esac
@@ -135,6 +140,10 @@ case $userInput in
 	  echo $BE_002 
 	  ;;
 	
+	be-003)
+	  echo $BE_003
+	  ;;
+
 	fe-001)
 	  echo $FE_001 
 esac
