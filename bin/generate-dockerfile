@@ -29,6 +29,7 @@ successMsg=$(
 echo -e $GREEN"[SUCCESS]"$NC
 )
 
+
 VERBOSE_TAG_1=$infoMsg
 VERBOSE_TAG_2=$errorMsg
 VERBOSE_TAG_3=$warningMsg
@@ -41,12 +42,17 @@ BE_001='Ansible_NodeJS__Ubuntu_16.04'
 TMP_DIR=./tmp/generated_dockerfiles
 DOCKER_OUTPUT='Dockerfile'
 
+## Frontend Env Vars
+FE_001='Simple_React_Docker'
+
 ## Backend Env Vars
 BE_001='Ansible_NodeJS__Ubuntu_16.04'
 BE_002='Jenkins_DockerCLI_Ubuntu_20.04'
+
 ## Arrays
 dockerFile=("backend" "frontend")
 backendList=("[be-001]Ansible_NodeJS__Ubuntu_16.04" "[be-002]Jenkins_DockerCLI_Ubuntu_20.04")
+frontendList=("[fe-001]Simple_react_docker")
 
 ## Main-script Function Code
 
@@ -68,13 +74,22 @@ if [[ $userDockerFile =~ backend$ ]]; then
 	for str in ${backendList[@]}; do
   		echo $GREEN $str
         done
+
+elif [[ $userDockerFile =~ frontend$ ]]; then
+	echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [3/$STEP] $dockerfileInput selected..."
+        echo "${BOLD} $VERBOSE_TAG_3 ${NORMAL} [3/$STEP] Please choose any of the custom dockerfiles below using its tag..."
+
+	for str in ${frontendList[@]}; do
+                echo $GREEN $str
+        done
+
 else
         echo "No available option matches that description"
 fi
 
-read -p ${BOLD}"Select:" -r userBackendInput
+read -p ${BOLD}"Select:" -r userInput
 
-if [[ $userBackendInput =~ be-001$ ]]; then
+if [[ $userInput =~ be-001$ ]]; then
 	echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [4/$STEP] $BE_001 selected..."
         echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [4/$STEP] Creating tmp directory..."
 	mkdir -p $TMP_DIR/$BE_001
@@ -83,14 +98,24 @@ if [[ $userBackendInput =~ be-001$ ]]; then
         cp ./src/templates/ansible_nodejs_ubuntu $TMP_DIR/$BE_001/$DOCKER_OUPUT
         echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [5/$STEP] $BE_001 dockerfile has been generated..."
         echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [6/$STEP] Validating if local generated file exists..."
-elif [[ $userBackendInput =~ be-002$ ]]; then
+elif [[ $userInput =~ be-002$ ]]; then
 	echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [4/$STEP] $BE_002 selected..."
         echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [4/$STEP] Creating tmp directory..."
         mkdir -p $TMP_DIR/$BE_002
         echo "${BOLD} $VERBOSE_TAG_4 ${NORMAL} [4/$STEP] tmp directory created..."
         echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [5/$STEP] Generating a local $BE_002 dockerfile..."
         cp ./src/templates/jenkins_dockertools_ubuntu $TMP_DIR/$BE_002/$DOCKER_OUPUT
-        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [5/$STEP] $BE_001 dockerfile has been generated..."
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [5/$STEP] $BE_002 dockerfile has been generated..."
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [6/$STEP] Validating if local generated file exists..."
+
+elif [[ $userInput =~ fe-001$ ]]; then
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [4/$STEP] $FE_001 selected..."
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [4/$STEP] Creating tmp directory..."
+        mkdir -p $TMP_DIR/$FE_001
+        echo "${BOLD} $VERBOSE_TAG_4 ${NORMAL} [4/$STEP] tmp directory created..."
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [5/$STEP] Generating a local $FE_001 dockerfile..."
+        cp ./src/templates/react_docker $TMP_DIR/$FE_001/$DOCKER_OUPUT
+        echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [5/$STEP] $FE_001 dockerfile has been generated..."
         echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} [6/$STEP] Validating if local generated file exists..."
 
 else
@@ -104,6 +129,22 @@ else
 	echo "${BOLD} $VERBOSE_TAG_4 ${NORMAL} [6/$STEP] Please inspect logs..."
 fi
 
-echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} You can find your newly generated $userBackendInput file at" 
+echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} You can find your newly generated $userInput file at" 
 
-echo ${BOLD} "$VERBOSE_TAG_1 ${NORMAL} $TMP_DIR/$BE_001/$DOCKER_OUTPUT"
+rotatingMsg=$( bash << EOF
+case $userInput in
+
+	be-001)
+	  echo $BE_001 
+	  ;;
+	
+	be-002)
+	  echo $BE_002 
+	  ;;
+	
+	fe-001)
+	  echo $FE_001 
+esac
+EOF
+)
+echo "${BOLD} $VERBOSE_TAG_1 ${NORMAL} $TMP_DIR/$rotatingMsg/$DOCKER_OUTPUT"
